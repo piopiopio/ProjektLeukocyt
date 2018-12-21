@@ -13,8 +13,8 @@ public class Enemy : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-	    randomDirection=new Vector2(Random.Range(1, -1), Random.Range(1, -1)).normalized;
-        InvokeRepeating("changeDirection", 3f, 3f);
+	    GetComponent<Rigidbody2D>().velocity = new Vector2(Random.Range(1, -1), Random.Range(1, -1)).normalized*RandomSpeed;
+        InvokeRepeating("changeDirection", 10f, 10f);
     }
 	
 	// Update is called once per frame
@@ -31,28 +31,29 @@ public class Enemy : MonoBehaviour
     void changeDirection()
     {
         randomDirection= new Vector2(Random.Range(100, -100), Random.Range(100, -100)).normalized;
-        Debug.Log("change direction x:"+ randomDirection.x+" y: " + randomDirection.y);
         GetComponent<Rigidbody2D>().velocity = randomDirection * RandomSpeed;
-        Debug.Log(Time.time);
+
+
+        Debug.Log(Time.time+"change direction x:" + randomDirection.x + " y: " + randomDirection.y);
     }
 
     float elapsed = 100f;
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.tag == "HorizontalWall" )
-        {
-            //randomDirection=new Vector2(randomDirection.x, -randomDirection.y);
-            GetComponent<Rigidbody2D>().velocity=new Vector2(GetComponent<Rigidbody2D>().velocity.x, -GetComponent<Rigidbody2D>().velocity.y);
-            randomDirection = GetComponent<Rigidbody2D>().velocity;
-            Debug.Log("Enemy-HorizontalWall collision");
-        }
+        //if (col.gameObject.tag == "HorizontalWall" )
+        //{
+        //    //randomDirection=new Vector2(randomDirection.x, -randomDirection.y);
+        //    GetComponent<Rigidbody2D>().velocity=new Vector2(GetComponent<Rigidbody2D>().velocity.x, -GetComponent<Rigidbody2D>().velocity.y);
 
-        if (col.gameObject.tag == "VerticalWall")
-        {
-            //randomDirection=new Vector2(-randomDirection.x, randomDirection.y);
-            GetComponent<Rigidbody2D>().velocity = new Vector2(-GetComponent<Rigidbody2D>().velocity.x, GetComponent<Rigidbody2D>().velocity.y);
-            randomDirection = GetComponent<Rigidbody2D>().velocity;
-            Debug.Log("Enemy-HorizontalWall collision" );
-        }
+        //    Debug.Log("Enemy-HorizontalWall collision");
+        //}
+
+        //if (col.gameObject.tag == "VerticalWall")
+        //{
+        //    //randomDirection=new Vector2(-randomDirection.x, randomDirection.y);
+        //    GetComponent<Rigidbody2D>().velocity = new Vector2(-GetComponent<Rigidbody2D>().velocity.x, GetComponent<Rigidbody2D>().velocity.y);
+
+        //    Debug.Log("Enemy-HorizontalWall collision" );
+        //}
     }
 }
