@@ -9,13 +9,14 @@ public class PlayerControls : MonoBehaviour
     private KeyCode moveDown = KeyCode.DownArrow;
     private KeyCode moveRight = KeyCode.RightArrow;
     private KeyCode moveLeft = KeyCode.LeftArrow;
-
     private int speed = 10;
 
+
+    private AudioSource source;
     // Use this for initialization
     void Start()
     {
-
+        source = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -32,7 +33,6 @@ public class PlayerControls : MonoBehaviour
         }
         else
         {
-
             GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
         }
 
@@ -46,7 +46,6 @@ public class PlayerControls : MonoBehaviour
         }
         else
         {
-
             GetComponent<Rigidbody2D>().velocity = new Vector2(0, GetComponent<Rigidbody2D>().velocity.y);
         }
 
@@ -58,6 +57,7 @@ public class PlayerControls : MonoBehaviour
         {
             Destroy(col.gameObject);
             Debug.Log("Kolizja");
+            source.Play();
         }
     }
 }
