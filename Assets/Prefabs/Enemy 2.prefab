@@ -23,7 +23,8 @@ GameObject:
   - component: {fileID: 50133516899567924}
   - component: {fileID: 58998546661388280}
   - component: {fileID: 114479810878252048}
-  m_Layer: 0
+  - component: {fileID: 114028542128902918}
+  m_Layer: 9
   m_Name: Enemy 2
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -38,7 +39,7 @@ Transform:
   m_GameObject: {fileID: 1894189677188954}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 6.03, y: -3.8362846, z: 0}
-  m_LocalScale: {x: 0.15, y: 0.15, z: 0}
+  m_LocalScale: {x: 0.12, y: 0.12, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -54,15 +55,15 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
-  m_Mass: 0.5
+  m_Mass: 0.3
   m_LinearDrag: 0.5
-  m_AngularDrag: 0
+  m_AngularDrag: 0.7
   m_GravityScale: 0
   m_Material: {fileID: 6200000, guid: e812dc5ef722c13409f22d65c3ce5f9d, type: 2}
   m_Interpolate: 2
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!58 &58998546661388280
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -78,6 +79,22 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 3
+--- !u!114 &114028542128902918
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1894189677188954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc90e4c17ecbc5242b2f28443409c0da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sendTriggerMessage: 0
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 311
+  skinWidth: 0.4
 --- !u!114 &114479810878252048
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -90,9 +107,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RunAwaySpeed: 0
-  RandomSpeed: 1500
+  RandomSpeed: 300
   EnemyCanReproduceHimself: 1
-  mainCam: {fileID: 0}
+  prefab: {fileID: 1351106585866258, guid: 01723d024b24cba4e8944a96f35c6978, type: 2}
 --- !u!212 &212763726012295954
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -127,7 +144,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: 5aacefd662b6be345881759bca57c814, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

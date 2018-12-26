@@ -19,11 +19,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4811811577788034}
-  - component: {fileID: 212176944005703376}
-  - component: {fileID: 50149298835634526}
   - component: {fileID: 58505106825202696}
   - component: {fileID: 114383296330366314}
-  m_Layer: 0
+  - component: {fileID: 114441293090771720}
+  - component: {fileID: 212176944005703376}
+  - component: {fileID: 50697245705133376}
+  m_Layer: 9
   m_Name: Enemy 1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -37,13 +38,13 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1251294176489830}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.58, y: -4.68, z: 0}
+  m_LocalPosition: {x: -1.2895888, y: -2.2524002, z: 0}
   m_LocalScale: {x: 0.15, y: 0.15, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!50 &50149298835634526
+--- !u!50 &50697245705133376
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 1
@@ -52,17 +53,17 @@ Rigidbody2D:
   m_GameObject: {fileID: 1251294176489830}
   m_BodyType: 0
   m_Simulated: 1
-  m_UseFullKinematicContacts: 1
+  m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.5
+  m_Mass: 1
   m_LinearDrag: 0.5
-  m_AngularDrag: 0
-  m_GravityScale: 0
+  m_AngularDrag: 0.7
+  m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: e812dc5ef722c13409f22d65c3ce5f9d, type: 2}
-  m_Interpolate: 2
+  m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
-  m_Constraints: 4
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!58 &58505106825202696
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -90,9 +91,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RunAwaySpeed: 0
-  RandomSpeed: 1500
+  RandomSpeed: 350
   EnemyCanReproduceHimself: 1
-  mainCam: {fileID: 0}
+  prefab: {fileID: 1894189677188954, guid: 7205a1ae2fc2a6e4193f1790a87f72e8, type: 2}
+--- !u!114 &114441293090771720
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1251294176489830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc90e4c17ecbc5242b2f28443409c0da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sendTriggerMessage: 1
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 311
+  skinWidth: 0.4
 --- !u!212 &212176944005703376
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -127,7 +144,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: de12ce7d177264a4a9456ad732bf6b20, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
