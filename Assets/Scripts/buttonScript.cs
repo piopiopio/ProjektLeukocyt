@@ -8,11 +8,6 @@ public class buttonScript : MonoBehaviour
 
 
 
-    private KeyCode moveUp = KeyCode.UpArrow;
-    private KeyCode moveDown = KeyCode.DownArrow;
-    private KeyCode moveRight = KeyCode.RightArrow;
-    private KeyCode moveLeft = KeyCode.LeftArrow;
-    private int speed = 10;
     //public BoxCollider2D topWall;// = new BoxCollider2D();
     //public BoxCollider2D bottomWall;// = new BoxCollider2D();
     //public BoxCollider2D rightWall;// = new BoxCollider2D();
@@ -43,17 +38,10 @@ public class buttonScript : MonoBehaviour
     void Update()
     {
         
-        if (Input.GetKey(moveUp) || Input.GetKey(moveDown) || Input.GetKey(moveRight) || Input.GetKey(moveLeft))
-        {
-            StartGame();
-        }
+
 
     }
 
-    public void StartGame()
-    {
-        SceneManager.LoadScene("1");
-    }
 }
 
 

@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
 
     public int RunAwaySpeed;
     public int RandomSpeed;
-    public bool EnemyCanReproduceHimself;
+    public static bool EnemyCanReproduceHimself;
     private Vector2 randomDirection;
 
     private Vector3 randomSpeedVector;
@@ -28,14 +28,14 @@ public class Enemy : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        randomSpeedVector = new Vector2(Random.Range(100, -100), Random.Range(100, -100)).normalized * RandomSpeed/10;
+        randomSpeedVector = new Vector2(Random.Range(100, -100), Random.Range(100, -100)).normalized * RandomSpeed / 10;
         GetComponent<Rigidbody2D>().AddForce(randomSpeedVector);
         InvokeRepeating("changeDirection", 5f, 5f);
 
         float multiplicationPeriod = Random.Range(20, 35) / 10f;
         InvokeRepeating("multiplicate", multiplicationPeriod, multiplicationPeriod);
 
-       // InvokeRepeating("multiplicate", 1, 1);
+        // InvokeRepeating("multiplicate", 1, 1);
     }
 
     // Update is called once per frame
@@ -65,18 +65,19 @@ public class Enemy : MonoBehaviour
 
     void changeDirection()
     {
-        randomDirection = new Vector2(Random.Range(100, -100), Random.Range(100, -100)).normalized;
-        randomSpeedVector = new Vector3(randomDirection.x * RandomSpeed, randomDirection.y * RandomSpeed, 0);
-
-        GetComponent<Rigidbody2D>().AddForce(randomSpeedVector);
-        Debug.Log(Time.time + "change direction x:" + randomDirection.x + " y: " + randomDirection.y);
-
+        if (!_freeze)
+        {
+            randomDirection = new Vector2(Random.Range(100, -100), Random.Range(100, -100)).normalized;
+            randomSpeedVector = new Vector3(randomDirection.x * RandomSpeed, randomDirection.y * RandomSpeed, 0);
+            GetComponent<Rigidbody2D>().AddForce(randomSpeedVector);
+            //Debug.Log(Time.time + "change direction x:" + randomDirection.x + " y: " + randomDirection.y);
+        }
 
     }
 
     void multiplicate()
     {
-     
+
 
         if (EnemyCanReproduceHimself && GameSetup.enemyQuantites < GameSetup.maxEnemyQuantity)
         {
@@ -112,7 +113,7 @@ public class Enemy : MonoBehaviour
 
 
         if (col.gameObject.tag == "Wall")
-      {
+        {
             //      Vector2 temp = (new Vector2(transform.position.x, transform.position.y)) - col.GetContact(0).point;
             //Vector2 n = col.GetContact(0).normal.normalized;
 
@@ -122,6 +123,28 @@ public class Enemy : MonoBehaviour
             //Debug.Log("Enemy-Wall collision, normal:"+n + "compare to manual calculated normal"+temp);
             ////  Destroy(gameObject);
             changeDirection();
-      }
-      }
+        }
+    }
+
+    private bool _freeze = false;
+    public bool Freeze
+    {
+        get { return _freeze; }
+        set
+        {
+            _freeze = value;
+            if (_freeze)
+            {
+
+                GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+                GetComponent<Rigidbody2D>().angularVelocity = 0;
+                GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+
+            }
+            else
+            {
+                GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+            }
+        }
+    }
 }

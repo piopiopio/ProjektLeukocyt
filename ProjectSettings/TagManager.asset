@@ -19,7 +19,7 @@ TagManager:
   - 
   - Background
   - Bugs
-  - 
+  - Player
   - 
   - 
   - 
@@ -42,6 +42,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Trail
+    uniqueID: 3928596805
+    locked: 0
   - name: Background
     uniqueID: 288261983
     locked: 0
