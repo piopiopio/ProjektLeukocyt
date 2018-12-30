@@ -18,8 +18,7 @@ public class Enemy : MonoBehaviour
     private Vector3 runAwaySpeedVector;
     // public Camera mainCam;// = new Camera();
     public GameObject prefab;
-
-
+    public static int multiplicationPeriodConstMiliSecond=2000;
     private Vector2 randomSpeedVector2d
     {
         get { return new Vector2(randomSpeedVector.x, randomSpeedVector.y); }
@@ -32,36 +31,17 @@ public class Enemy : MonoBehaviour
         GetComponent<Rigidbody2D>().AddForce(randomSpeedVector);
         InvokeRepeating("changeDirection", 5f, 5f);
 
-        float multiplicationPeriod = Random.Range(20, 35) / 10f;
+        float multiplicationPeriod = (Random.Range(multiplicationPeriodConstMiliSecond, multiplicationPeriodConstMiliSecond*2)) / 1000f;
         InvokeRepeating("multiplicate", multiplicationPeriod, multiplicationPeriod);
 
         // InvokeRepeating("multiplicate", 1, 1);
     }
-
+     
     // Update is called once per frame
     void Update()
     {
-
-        //   GetComponent<Rigidbody2D>().velocity = (transform.position - Player.transform.position).normalized * RunAwaySpeed + new Vector3(randomDirection.x , randomDirection.y , 0)* RandomSpeed;
-
-        // runAwaySpeedVector = (transform.position - Player.transform.position).normalized * RunAwaySpeed;
-        //  GetComponent<Rigidbody2D>().velocity = randomSpeedVector;// + runAwaySpeedVector;
-        // WatchDog();
-
-
     }
 
-    //void WatchDog()
-    //{
-    //   var temp= mainCam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0f));
-    //    if (transform.position.x > temp.x || transform.position.x < -temp.x || transform.position.y > temp.y || transform.position.y < -temp.y) 
-    //    {
-    //        Destroy(gameObject);
-    //        GameSetup.enemyQuantites--;
-    //        Debug.Log("Watch dog delete object");
-    //    }
-
-    //}
 
     void changeDirection()
     {
@@ -70,7 +50,6 @@ public class Enemy : MonoBehaviour
             randomDirection = new Vector2(Random.Range(100, -100), Random.Range(100, -100)).normalized;
             randomSpeedVector = new Vector3(randomDirection.x * RandomSpeed, randomDirection.y * RandomSpeed, 0);
             GetComponent<Rigidbody2D>().AddForce(randomSpeedVector);
-            //Debug.Log(Time.time + "change direction x:" + randomDirection.x + " y: " + randomDirection.y);
         }
 
     }
@@ -81,7 +60,6 @@ public class Enemy : MonoBehaviour
 
         if (EnemyCanReproduceHimself && GameSetup.enemyQuantites < GameSetup.maxEnemyQuantity)
         {
-            //Instantiate(this.gameObject);
             Instantiate(prefab, this.gameObject.transform.position - 0.3f * (this.gameObject.transform.position).normalized, Quaternion.identity);
             GameSetup.enemyQuantites++;
             changeDirection();
@@ -135,16 +113,27 @@ public class Enemy : MonoBehaviour
             _freeze = value;
             if (_freeze)
             {
-
-                GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
-                GetComponent<Rigidbody2D>().angularVelocity = 0;
-                GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
-
+                if (GetComponent<Rigidbody2D>().bodyType == RigidbodyType2D.Dynamic)
+                {
+                    GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+                    GetComponent<Rigidbody2D>().angularVelocity = 0;
+                    GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+                }
             }
             else
             {
                 GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
             }
         }
+    }
+
+    public void Destroy()
+    {
+        GetComponent<Animator>().Play("EnemyDeath");
+        //var rigidbody = GetComponent<Rigidbody2D>();
+        //Destroy(rigidbody);
+        gameObject.layer = 11;
+        Freeze = true;
+        Destroy(this.gameObject, 0.4f);
     }
 }

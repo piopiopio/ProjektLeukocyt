@@ -49,7 +49,7 @@ public class MenuControl : MonoBehaviour
     {
 
         Instantiate(enemy1, new Vector3(4.7f, 2.6f, 0f), Quaternion.identity);
-        Instantiate(enemy1, new Vector3(-2.1f, 4.2f, 0f), Quaternion.identity);
+        Instantiate(enemy1, new Vector3(-2.1f, 2.5f, 0f), Quaternion.identity);
         Instantiate(enemy1, new Vector3(-5.1f, 2.4f, 0f), Quaternion.identity);
 
         Instantiate(enemy2, new Vector3(-0.4f, -2f, 0f), Quaternion.identity);
@@ -65,5 +65,7 @@ public class MenuControl : MonoBehaviour
 
         GameSetup.enemyQuantites = 10;
         Player.transform.localScale=new Vector3(0.3f,0.3f,0.3f);
+        Player.GetComponent<PlayerControls>().Initialise();
+
     }
 }

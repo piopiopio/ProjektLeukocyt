@@ -14,8 +14,12 @@ public class PlayerControls : MonoBehaviour
     private KeyCode moveDown = KeyCode.DownArrow;
     private KeyCode moveRight = KeyCode.RightArrow;
     private KeyCode moveLeft = KeyCode.LeftArrow;
-    private int speed = 10;
+    public int Speed = 10;
     public bool KillEnemyOn;
+
+    public bool _cheat = false;
+
+
     public Text VirusesLeftText;
     public Text VirusesKilledText;
     private int VirusesKilled = 0;
@@ -37,7 +41,7 @@ public class PlayerControls : MonoBehaviour
         RedEndLifeSprite.transform.position = new Vector3(0, (float)(-14.5 + 14.3 * GameSetup.enemyQuantites / GameSetup.maxEnemyQuantity), 0);
 
         thisRigidBody = GetComponent<Rigidbody2D>();
-
+        // trail.startWidth = 3;
     }
 
 
@@ -47,22 +51,30 @@ public class PlayerControls : MonoBehaviour
 
     void Update()
     {
+        if (_cheat == true)
+        {
+            PlayerSprite.transform.localScale = new Vector3(4f, 4f, 4f);
+        }
+        else
+        {
+            PlayerSprite.transform.localScale = new Vector3(1f, 1f, 1f);
+        }
+
         if (!_freeze)
         {
             isInMove = false;
 
             VirusesLeftText.text = "Viruses left: " + GameSetup.enemyQuantites.ToString();
-            RedEndLifeSprite.transform.position = new Vector3(0,
-                (float) (-14.5 + 14.3 * GameSetup.enemyQuantites / GameSetup.maxEnemyQuantity), 0);
+
 
             if (Input.GetKey(moveUp))
             {
-                GetComponent<Rigidbody2D>().velocity = new Vector2(0, speed);
+                GetComponent<Rigidbody2D>().velocity = new Vector2(0, Speed);
                 isInMove = true;
             }
             else if (Input.GetKey(moveDown))
             {
-                GetComponent<Rigidbody2D>().velocity = new Vector2(0, -speed);
+                GetComponent<Rigidbody2D>().velocity = new Vector2(0, -Speed);
                 isInMove = true;
             }
             else
@@ -73,12 +85,12 @@ public class PlayerControls : MonoBehaviour
 
             if (Input.GetKey(moveRight))
             {
-                GetComponent<Rigidbody2D>().velocity = new Vector2(speed, GetComponent<Rigidbody2D>().velocity.y);
+                GetComponent<Rigidbody2D>().velocity = new Vector2(Speed, GetComponent<Rigidbody2D>().velocity.y);
                 isInMove = true;
             }
             else if (Input.GetKey(moveLeft))
             {
-                GetComponent<Rigidbody2D>().velocity = new Vector2(-speed, GetComponent<Rigidbody2D>().velocity.y);
+                GetComponent<Rigidbody2D>().velocity = new Vector2(-Speed, GetComponent<Rigidbody2D>().velocity.y);
                 isInMove = true;
             }
             else
@@ -126,6 +138,7 @@ public class PlayerControls : MonoBehaviour
             _freeze = value;
             GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
             GetComponent<Rigidbody2D>().angularVelocity = 0;
+            KillEnemyOn = !_freeze;
         }
     }
 
@@ -138,18 +151,29 @@ public class PlayerControls : MonoBehaviour
             if (KillEnemyOn)
             {
 
-                Destroy(col.gameObject);
+                col.gameObject.GetComponent<Enemy>().Destroy();
                 GameSetup.enemyQuantites--;
 
                 source.Play();
                 VirusesKilled++;
                 VirusesKilledText.text = "Viruses killed: " + VirusesKilled;
 
-                if (PlayerSprite.transform.localScale.x <= MaxScale && PlayerSprite.transform.localScale.y <= MaxScale)
-                    //  transform.localScale += ScaleIncrement;
-                    PlayerSprite.transform.localScale += ScaleIncrement;
+                //if (PlayerSprite.transform.localScale.x <= MaxScale && PlayerSprite.transform.localScale.y <= MaxScale)
+                //    //  transform.localScale += ScaleIncrement;
+                //   // PlayerSprite.transform.localScale += ScaleIncrement;
+                //    PlayerSprite.transform.localScale = new Vector3(4f,4f,4f);
 
             }
         }
+    }
+
+        
+    
+
+    public void Initialise()
+    {
+        PlayerSprite.transform.localScale = new Vector3(1, 1, 0);
+        VirusesKilled = 0;
+        VirusesKilledText.text = "Viruses killed: " + VirusesKilled;
     }
 }

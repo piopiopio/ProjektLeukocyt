@@ -13,6 +13,7 @@ public class LossControl : MonoBehaviour
 
 
     public GameObject MenuControls;
+    public GameObject _gm;
     // Use this for initialization
     void Start()
     {
@@ -52,7 +53,7 @@ public class LossControl : MonoBehaviour
 
             gameObject.SetActive(false);
             GameSetup.LossFlag = false;
-
+            _gm.GetComponent<GameSetup>().resetGame();
         }
     }
 
