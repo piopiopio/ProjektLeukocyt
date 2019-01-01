@@ -19,6 +19,8 @@ public class Enemy : MonoBehaviour
     // public Camera mainCam;// = new Camera();
     public GameObject prefab;
     public static int multiplicationPeriodConstMiliSecond=2000;
+    public static int EnemyQuantity = 0;
+    private static Object LockObject=new Object();
     private Vector2 randomSpeedVector2d
     {
         get { return new Vector2(randomSpeedVector.x, randomSpeedVector.y); }
@@ -27,6 +29,11 @@ public class Enemy : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        lock (Enemy.LockObject)
+        {
+            EnemyQuantity++;
+            Debug.Log(EnemyQuantity);
+        }
         randomSpeedVector = new Vector2(Random.Range(100, -100), Random.Range(100, -100)).normalized * RandomSpeed / 10;
         GetComponent<Rigidbody2D>().AddForce(randomSpeedVector);
         InvokeRepeating("changeDirection", 5f, 5f);
@@ -58,10 +65,11 @@ public class Enemy : MonoBehaviour
     {
 
 
-        if (EnemyCanReproduceHimself && GameSetup.enemyQuantites < GameSetup.maxEnemyQuantity)
+     //   if (EnemyCanReproduceHimself && GameSetup.enemyQuantites < GameSetup.maxEnemyQuantity)
+        if (EnemyCanReproduceHimself && Enemy.EnemyQuantity < GameSetup.maxEnemyQuantity)
         {
             Instantiate(prefab, this.gameObject.transform.position - 0.3f * (this.gameObject.transform.position).normalized, Quaternion.identity);
-            GameSetup.enemyQuantites++;
+            //GameSetup.enemyQuantites++;
             changeDirection();
         }
 
@@ -129,11 +137,21 @@ public class Enemy : MonoBehaviour
 
     public void Destroy()
     {
+        tag = "DestroyedEnemy";
         GetComponent<Animator>().Play("EnemyDeath");
-        //var rigidbody = GetComponent<Rigidbody2D>();
-        //Destroy(rigidbody);
         gameObject.layer = 11;
         Freeze = true;
-        Destroy(this.gameObject, 0.4f);
+        InvokeRepeating("DestroyExecution", 0.4f, 0.4f);
+        lock (Enemy.LockObject)
+        {
+            EnemyQuantity--;
+            Debug.Log(EnemyQuantity);
+        }
+    }
+
+    public void DestroyExecution()
+    {
+
+        Destroy(this.gameObject);
     }
 }

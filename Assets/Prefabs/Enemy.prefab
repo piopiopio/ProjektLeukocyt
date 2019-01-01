@@ -91,8 +91,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RunAwaySpeed: 0
   RandomSpeed: 500
-  EnemyCanReproduceHimself: 0
-  mainCam: {fileID: 0}
+  prefab: {fileID: 0}
 --- !u!212 &212508795917182268
 SpriteRenderer:
   m_ObjectHideFlags: 1

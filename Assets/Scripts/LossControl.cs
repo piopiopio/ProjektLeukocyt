@@ -14,7 +14,9 @@ public class LossControl : MonoBehaviour
 
     public GameObject MenuControls;
     public GameObject _gm;
-    // Use this for initialization
+
+    
+      // Use this for initialization
     void Start()
     {
         //     ChangeElementStatus(false);
@@ -30,18 +32,13 @@ public class LossControl : MonoBehaviour
         {
             // Destroy(this.gameObject);
 
-
-            Time.timeScale = 1;
-
-
-
-
-
-
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
             foreach (GameObject enemy in enemies)
             {
-                GameObject.Destroy(enemy);
+                //GameObject.Destroy(enemy);
+                enemy.GetComponent<Enemy>().Destroy();
+
+               // enemy.GetComponent<Enemy>().DestroyExecution();
             }
 
 
@@ -51,9 +48,17 @@ public class LossControl : MonoBehaviour
             MenuControls.gameObject.GetComponent<MenuControl>().ChangeElementStatus(false);
 
 
-            gameObject.SetActive(false);
-            GameSetup.LossFlag = false;
+           
+            
+
+
             _gm.GetComponent<GameSetup>().resetGame();
+
+
+            gameObject.SetActive(false);
+
+            Enemy.multiplicationPeriodConstMiliSecond = 2000;
+            // GameSetup.LossFlag = false;
         }
     }
 

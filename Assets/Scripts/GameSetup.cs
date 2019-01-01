@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = System.Random;
 
 public class GameSetup : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class GameSetup : MonoBehaviour
 
     public Camera mainCam;// = new Camera();
     public Animator animator;
-
+    public bool killGame = false;
     public Text BestLevelText;
     public Text LevelText;
     public Text LevelText1;
@@ -25,7 +26,7 @@ public class GameSetup : MonoBehaviour
     //public BoxCollider2D leftWall;// = new BoxCollider2D();
 
     public Transform Player01;
-    public static int enemyQuantites = 10;
+    // public static int enemyQuantites = 10;
     public static int maxEnemyQuantity = 40;
 
     public static int bestLevel = 0;
@@ -53,6 +54,16 @@ public class GameSetup : MonoBehaviour
     public GameObject enemy1;
     public GameObject enemy2;
     public GameObject enemy3;
+
+    public Sprite MutedSprite;
+    public Sprite UnmutedSprite;
+    public GameObject MuteButton;
+
+    public Sprite PausePause;
+    public Sprite PausePlay;
+    public GameObject PauseButton;
+    public GameObject PausedText;
+    public GameObject Pills;
     // Use this for initialization
     void Start()
     {
@@ -93,6 +104,7 @@ public class GameSetup : MonoBehaviour
 
 
         LevelCount = Mathf.Min(LevelsEnemysList.Count, SceneList.Count);
+        RedBackground.transform.position = new Vector3(0, (float)(-14.3 + 14.1 * Enemy.EnemyQuantity / GameSetup.maxEnemyQuantity), 0);
     }
 
     // Update is called once per frame
@@ -100,17 +112,18 @@ public class GameSetup : MonoBehaviour
 
     public void changeLevel()
     {
-
+        Enemy.multiplicationPeriodConstMiliSecond = (int)(Enemy.multiplicationPeriodConstMiliSecond * 0.9);
+       
         if (!(LoopedLevel < LevelCount))
         {
             LoopedLevel -= LevelCount;
-            Enemy.multiplicationPeriodConstMiliSecond = Enemy.multiplicationPeriodConstMiliSecond / 2;
-            //Player01.GetComponent<PlayerControls>().Speed = Player01.GetComponent<PlayerControls>().Speed / 2;
+
+            
         }
 
 
         Destroy(Scene);
-        enemyQuantites = 10;
+
 
         foreach (var item in LevelsEnemysList[LoopedLevel])
         {
@@ -138,55 +151,157 @@ public class GameSetup : MonoBehaviour
         Destroy(Scene);
         Scene = Instantiate(SceneList[0]);
         LevelText1.text = "Level: " + Level.ToString();
-        
-        
+        LossFlag = false;
     }
-    
+
+
+    public void MuteClick()
+    {
+        GetComponent<AudioSource>().mute = !GetComponent<AudioSource>().mute;
+        if (GetComponent<AudioSource>().mute == true)
+        {
+            MuteButton.GetComponent<Image>().sprite = MutedSprite;
+            Player01.GetComponent<PlayerControls>().muted = true;
+        }
+        else
+        {
+            MuteButton.GetComponent<Image>().sprite = UnmutedSprite;
+            Player01.GetComponent<PlayerControls>().muted = false;
+        }
+
+    }
+
+    private bool paused = false;
+    public void Pause()
+    {
+        paused = !paused;
+
+        if (paused)
+        {
+            PauseButton.GetComponent<Button>().image.sprite = PausePlay;
+
+            Player01.GetComponent<PlayerControls>().Freeze = true;
+            Time.timeScale = 0;
+            MuteButton.SetActive(true);
+            PausedText.SetActive(true);
+        }
+        else
+        {
+            PauseButton.GetComponent<Button>().image.sprite = PausePause;
+
+            Player01.GetComponent<PlayerControls>().Freeze = false;
+            Time.timeScale = 1;
+            MuteButton.SetActive(false);
+            PausedText.SetActive(false);
+        }
+    }
+    public static bool NoPillFlag = true;
     void Update()
     {
 
-        if (enemyQuantites == 0)
+
+
+        if (killGame == true)
+        {
+            killGame = false;
+            for (int i = 0; i < 40; i++)
+            {
+                Instantiate(enemy1);
+            }
+        }
+
+
+
+        if (Enemy.EnemyQuantity <= 0)
         {
             changeLevel();
         }
 
-        RedBackground.transform.position = new Vector3(0, (float)(-14.5 + 14.3 * GameSetup.enemyQuantites / GameSetup.maxEnemyQuantity), 0);
-
-
-        if (enemyQuantites >= maxEnemyQuantity)
+        if (Loss.gameObject.activeSelf == false)
         {
-            animator.SetInteger("Viruses", 0);
+            //RedBackground.transform.position = new Vector3(0,
+            //    (float) (-14.5 + 14.3 * Enemy.EnemyQuantity / GameSetup.maxEnemyQuantity), 0);
+            RedBackground.transform.position = new Vector3(0, (float)(-14.3 + 14.1 * Enemy.EnemyQuantity / GameSetup.maxEnemyQuantity), 0);
+        }
+
+        if (Player01.GetComponent<PlayerControls>().VirusesKilled % 20 == 0 && NoPillFlag && Player01.GetComponent<PlayerControls>().VirusesKilled != 0)
+        {
+            NoPillFlag = false;
+
+            //var p= Instantiate(Pills, GameObject.FindGameObjectWithTag("Enemy").transform.position, Quaternion.identity);
+
+            var p = Instantiate(Pills, new Vector3(UnityEngine.Random.Range(-2.1f, 2.1f), UnityEngine.Random.Range(-2f, 0.2f), 0), Quaternion.identity);
+
+            p.GetComponent<SpriteRenderer>().color = EnemysList[UnityEngine.Random.Range(0, EnemysList.Count)].GetComponentsInChildren<SpriteRenderer>()[1].color;
+
+        }
+
+
+
+        if (Enemy.EnemyQuantity >= maxEnemyQuantity)
+        {
+
             if (!LossFlag)
             {
 
-                menuGameObject.gameObject.GetComponent<MenuControl>().ChangeElementStatus(false);
-
+                RedBackground.transform.position = new Vector3(0, (float)(-14.3 + 14.1 * Enemy.EnemyQuantity / GameSetup.maxEnemyQuantity), 0);
                 LossFlag = true;
-
-                Loss.gameObject.SetActive(true);
+                
 
                 GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
                 foreach (GameObject enemy in enemies)
                 {
                     enemy.GetComponent<Enemy>().Freeze = true;
                 }
-
-
                 Player01.GetComponent<PlayerControls>().Freeze = true;
 
 
+
+                //Debug.Log("Loss.gameObject.SetActive(true); Loseflag" + LossFlag);
+
+                animator.SetInteger("Viruses", 0);
+                //Invoke("LoadLossMenu",5f);
+                menuGameObject.gameObject.GetComponent<MenuControl>().ChangeElementStatus(false);
                 BestLevelText.text = "Best level: " + bestLevel.ToString();
                 bestLevel = Math.Max(Level, bestLevel);
                 LevelText.text = "Level: " + Level.ToString();
 
-
+                PauseButton.SetActive(false);
+                MuteButton.SetActive(true);
+                Loss.gameObject.SetActive(true);
             }
         }
         else
         {
-            animator.SetInteger("Viruses", enemyQuantites);
-        }
+            if (Loss.gameObject.activeSelf == false)
+            {
+                animator.SetInteger("Viruses", Enemy.EnemyQuantity);
+            }
 
-    ;
+        }
+      //  Enemy.EnemyQuantity = GameObject.FindGameObjectsWithTag("Enemy").Length;
+      //  Debug.Log("Enemy quantity: "+Enemy.EnemyQuantity);
     }
+
+    //public void LoadLossMenu()
+    //{
+    //    menuGameObject.gameObject.GetComponent<MenuControl>().ChangeElementStatus(false);
+    //    BestLevelText.text = "Best level: " + bestLevel.ToString();
+    //    bestLevel = Math.Max(Level, bestLevel);
+    //    LevelText.text = "Level: " + Level.ToString();
+      
+    //    PauseButton.SetActive(false);
+    //    MuteButton.SetActive(true);
+    //    Loss.gameObject.SetActive(true);
+    //}    //public void LoadLossMenu()
+    //{
+    //    menuGameObject.gameObject.GetComponent<MenuControl>().ChangeElementStatus(false);
+    //    BestLevelText.text = "Best level: " + bestLevel.ToString();
+    //    bestLevel = Math.Max(Level, bestLevel);
+    //    LevelText.text = "Level: " + Level.ToString();
+      
+    //    PauseButton.SetActive(false);
+    //    MuteButton.SetActive(true);
+    //    Loss.gameObject.SetActive(true);
+    //}
 }

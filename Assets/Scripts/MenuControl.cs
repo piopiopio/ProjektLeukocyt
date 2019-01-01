@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Experimental.UIElements;
 
 public class MenuControl : MonoBehaviour
 {
@@ -17,25 +18,32 @@ public class MenuControl : MonoBehaviour
     private KeyCode moveRight = KeyCode.RightArrow;
     private KeyCode moveLeft = KeyCode.LeftArrow;
 
+    public GameObject PauseButton;
+    public GameObject MuteButton;
 
     // Use this for initialization
     void Start ()
     {
         ChangeElementStatus(false);
         SetUpEnemies();
-
+        
     }
 	
 	// Update is called once per frame
 	void Update () {
 
 	    if (Input.GetKey(moveUp) || Input.GetKey(moveDown) || Input.GetKey(moveRight) || Input.GetKey(moveLeft))
-	    {
-	        ChangeElementStatus(true);
+        {
+            Player.transform.position = new Vector3(0, 0, 0);
+            // Enemy.breakDestruction = false;
+            ChangeElementStatus(true);
            // Destroy(this.gameObject);
            this.gameObject.SetActive(false);
 	        Player.GetComponent<PlayerControls>().Freeze = false;
-	    }
+            PauseButton.SetActive(true);
+            MuteButton.SetActive(false);
+            
+        }
     }
 
     public void ChangeElementStatus(bool var)
@@ -63,7 +71,7 @@ public class MenuControl : MonoBehaviour
 
         //  GameSetup.enemyQuantites= GameObject.FindGameObjectsWithTag("Enemy").Count();
 
-        GameSetup.enemyQuantites = 10;
+       // GameSetup.enemyQuantites = 10;
         Player.transform.localScale=new Vector3(0.3f,0.3f,0.3f);
         Player.GetComponent<PlayerControls>().Initialise();
 

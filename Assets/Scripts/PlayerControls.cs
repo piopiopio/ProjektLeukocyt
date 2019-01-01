@@ -22,23 +22,27 @@ public class PlayerControls : MonoBehaviour
 
     public Text VirusesLeftText;
     public Text VirusesKilledText;
-    private int VirusesKilled = 0;
-    private Vector3 ScaleIncrement;
-    public GameObject RedEndLifeSprite;
+    public int VirusesKilled = 0;
+    //private Vector3 ScaleIncrement;
+    //public GameObject RedEndLifeSprite;
     private AudioSource source;
     public Animator animator;
     public GameObject PlayerSprite;
     public TrailRenderer trail;
 
+    public bool muted = false;
     // Use this for initialization
     void Start()
     {
-        float scale = 0.01f;
-        ScaleIncrement = new Vector3(scale, scale, 0f);
-        VirusesLeftText.text = "Viruses left: " + GameSetup.enemyQuantites.ToString();
+        //   float scale = 0.01f;
+        //  ScaleIncrement = new Vector3(scale, scale, 0f);
+
+        // VirusesLeftText.text = "Viruses left: " + GameSetup.enemyQuantites.ToString();
+        VirusesLeftText.text = "Viruses left: " + Enemy.EnemyQuantity.ToString();
         VirusesKilledText.text = "Viruses killed: " + VirusesKilled;
         source = GetComponent<AudioSource>();
-        RedEndLifeSprite.transform.position = new Vector3(0, (float)(-14.5 + 14.3 * GameSetup.enemyQuantites / GameSetup.maxEnemyQuantity), 0);
+      //  RedEndLifeSprite.transform.position = new Vector3(0, (float)(-14.5 + 14.3 * GameSetup.enemyQuantites / GameSetup.maxEnemyQuantity), 0);
+        //RedEndLifeSprite.transform.position = new Vector3(0, (float)(-14.3 + 14.1 * Enemy.EnemyQuantity / GameSetup.maxEnemyQuantity), 0);
 
         thisRigidBody = GetComponent<Rigidbody2D>();
         // trail.startWidth = 3;
@@ -60,11 +64,16 @@ public class PlayerControls : MonoBehaviour
             PlayerSprite.transform.localScale = new Vector3(1f, 1f, 1f);
         }
 
+
+
+
+
         if (!_freeze)
         {
             isInMove = false;
 
-            VirusesLeftText.text = "Viruses left: " + GameSetup.enemyQuantites.ToString();
+           // VirusesLeftText.text = "Viruses left: " + GameSetup.enemyQuantites.ToString();
+            VirusesLeftText.text = "Viruses left: " + Enemy.EnemyQuantity.ToString();
 
 
             if (Input.GetKey(moveUp))
@@ -145,6 +154,34 @@ public class PlayerControls : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
+
+
+        if (col.gameObject.tag == "Pills")
+        {
+            GameSetup.NoPillFlag = true;
+            GameObject[] tempCollection = GameObject.FindGameObjectsWithTag("Enemy");
+
+            KillEnemyOn = false;
+            Enemy.EnemyCanReproduceHimself = false;
+            var sameColorsEnemies = tempCollection.Where(enemy=>enemy.GetComponentsInChildren<SpriteRenderer>()[1].color ==
+                                                                col.gameObject.GetComponent<SpriteRenderer>().color).ToList();
+            //for (int i = 0; i < tempCollection.GetLength(0); i++)
+            //{
+            //    if (tempCollection[i].GetComponentsInChildren<SpriteRenderer>()[1].color ==
+            //        col.gameObject.GetComponent<SpriteRenderer>().color)
+            //    {
+            //        tempCollection[i].gameObject.GetComponent<Enemy>().Destroy();
+            //        //   GameSetup.enemyQuantites--;
+            //    }
+            //}
+            sameColorsEnemies.ForEach(enemy=>enemy.GetComponent<Enemy>().Destroy());
+            KillEnemyOn = true;
+            Enemy.EnemyCanReproduceHimself = true;
+            //VirusesKilled += temp;
+            Destroy(col.gameObject);
+
+            return;
+        }
         //col.contacts.First().normal;
         if (col.gameObject.tag == "Enemy")
         {
@@ -152,9 +189,13 @@ public class PlayerControls : MonoBehaviour
             {
 
                 col.gameObject.GetComponent<Enemy>().Destroy();
-                GameSetup.enemyQuantites--;
+              // GameSetup.enemyQuantites--;
+                if (!muted)
+                {
+                    source.Play();
+                }
 
-                source.Play();
+
                 VirusesKilled++;
                 VirusesKilledText.text = "Viruses killed: " + VirusesKilled;
 
@@ -165,6 +206,7 @@ public class PlayerControls : MonoBehaviour
 
             }
         }
+
     }
 
         

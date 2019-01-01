@@ -14,11 +14,13 @@ public class Mimic : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (GameSetup.enemyQuantites < 20)
+       // if (GameSetup.enemyQuantites < 20)
+        if (Enemy.EnemyQuantity < 20)
         {
             MimicOutputSprite.sprite = HappySprite;
         }
-        else if ((GameSetup.enemyQuantites >= 20) && (GameSetup.enemyQuantites <= 30))
+        //else if ((GameSetup.enemyQuantites >= 20) && (GameSetup.enemyQuantites <= 30))
+        else if ((Enemy.EnemyQuantity >= 20) && (Enemy.EnemyQuantity <= 30))
         {
             MimicOutputSprite.sprite = SuprisedSprite;
         }

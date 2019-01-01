@@ -117,10 +117,10 @@ public class RenderingToolFunctionality
 		switch (colorSp)
 		{
 			case enumColorSpaces.Gamma:
-				PlayerSettings.colorSpace = ColorSpace.Gamma;
+				//PlayerSettings.colorSpace = ColorSpace.Gamma;
 				break;
 			case enumColorSpaces.Linear:
-				PlayerSettings.colorSpace = ColorSpace.Linear;
+				//PlayerSettings.colorSpace = ColorSpace.Linear;
 				break;
 		}
 	}
