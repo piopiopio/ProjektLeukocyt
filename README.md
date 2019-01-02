@@ -7,5 +7,6 @@ Hyper-Casual game-> kill all viruses.
 ![](./Documentation/4.png)
 ![](./Documentation/5.png)
 ![](./Documentation/6.png)
+![](./Documentation/7.png)
 ![](./Documentation/8.PNG)
 ![](./Documentation/9.PNG)
