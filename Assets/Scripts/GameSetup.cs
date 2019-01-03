@@ -16,6 +16,7 @@ public class GameSetup : MonoBehaviour
     public Animator animator;
     public bool killGame = false;
     public Text BestLevelText;
+    public Text BestLevelTextHeader;
     public Text LevelText;
     public Text LevelText1;
 
@@ -29,7 +30,7 @@ public class GameSetup : MonoBehaviour
     // public static int enemyQuantites = 10;
     public static int maxEnemyQuantity = 40;
 
-    public static int bestLevel = 0;
+    private static int bestLevel = 1;
     public static int Level = 1;
     private static int LoopedLevel = 1;
     private static int LevelCount;
@@ -64,6 +65,7 @@ public class GameSetup : MonoBehaviour
     public GameObject PauseButton;
     public GameObject PausedText;
     public GameObject Pills;
+    
     // Use this for initialization
     void Start()
     {
@@ -104,9 +106,13 @@ public class GameSetup : MonoBehaviour
 
 
         LevelCount = Mathf.Min(LevelsEnemysList.Count, SceneList.Count);
-        RedBackground.transform.position = new Vector3(0, (float)(-14.3 + 14.1 * Enemy.EnemyQuantity / GameSetup.maxEnemyQuantity), 0);
+        moveBackground();
     }
 
+    public void moveBackground()
+    {
+        RedBackground.transform.position = new Vector3(0, Mathf.Min((float)(-14.3 + 14.3 * Enemy.EnemyQuantity / GameSetup.maxEnemyQuantity),0), 0);
+    }
     // Update is called once per frame
     public static bool LossFlag = false;
 
@@ -175,6 +181,8 @@ public class GameSetup : MonoBehaviour
     public void Pause()
     {
         paused = !paused;
+        //PauseButton.GetComponent<Animator>().SetBool("Pressed", true);
+        //PauseButton.GetComponent<Animator>().Play("PausePress");
 
         if (paused)
         {
@@ -194,6 +202,9 @@ public class GameSetup : MonoBehaviour
             MuteButton.SetActive(false);
             PausedText.SetActive(false);
         }
+        // PauseButton.GetComponent<Animator>().SetTrigger("Pressed");
+        //  PauseButton.GetComponent<Animator>().Play("PausePress");
+        PauseButton.GetComponent<Animator>().SetBool("Pressed", true);
     }
     public static bool NoPillFlag = true;
     void Update()
@@ -221,7 +232,7 @@ public class GameSetup : MonoBehaviour
         {
             //RedBackground.transform.position = new Vector3(0,
             //    (float) (-14.5 + 14.3 * Enemy.EnemyQuantity / GameSetup.maxEnemyQuantity), 0);
-            RedBackground.transform.position = new Vector3(0, (float)(-14.3 + 14.1 * Enemy.EnemyQuantity / GameSetup.maxEnemyQuantity), 0);
+            moveBackground();// RedBackground.transform.position = new Vector3(0, (float)(-14.3 + 14.3 * Enemy.EnemyQuantity / GameSetup.maxEnemyQuantity), 0);
         }
 
         if (Player01.GetComponent<PlayerControls>().VirusesKilled % 20 == 0 && NoPillFlag && Player01.GetComponent<PlayerControls>().VirusesKilled != 0)
@@ -233,6 +244,7 @@ public class GameSetup : MonoBehaviour
             var p = Instantiate(Pills, new Vector3(UnityEngine.Random.Range(-2.1f, 2.1f), UnityEngine.Random.Range(-2f, 0.2f), 0), Quaternion.identity);
 
             p.GetComponent<SpriteRenderer>().color = EnemysList[UnityEngine.Random.Range(0, EnemysList.Count)].GetComponentsInChildren<SpriteRenderer>()[1].color;
+           
 
         }
 
@@ -244,7 +256,7 @@ public class GameSetup : MonoBehaviour
             if (!LossFlag)
             {
 
-                RedBackground.transform.position = new Vector3(0, (float)(-14.3 + 14.1 * Enemy.EnemyQuantity / GameSetup.maxEnemyQuantity), 0);
+                moveBackground();//RedBackground.transform.position = new Vector3(0, (float)(-14.3 + 14.3 * Enemy.EnemyQuantity / GameSetup.maxEnemyQuantity), 0);
                 LossFlag = true;
                 
 
@@ -263,12 +275,24 @@ public class GameSetup : MonoBehaviour
                 //Invoke("LoadLossMenu",5f);
                 menuGameObject.gameObject.GetComponent<MenuControl>().ChangeElementStatus(false);
                 BestLevelText.text = "Best level: " + bestLevel.ToString();
-                bestLevel = Math.Max(Level, bestLevel);
+
                 LevelText.text = "Level: " + Level.ToString();
 
                 PauseButton.SetActive(false);
                 MuteButton.SetActive(true);
+
+                if (Level > bestLevel)
+                {
+                    BestLevelTextHeader.gameObject.SetActive(true);
+                }
+                else
+                {
+
+                    BestLevelTextHeader.gameObject.SetActive(false);
+                }
                 Loss.gameObject.SetActive(true);
+                bestLevel = Math.Max(Level, bestLevel);
+
             }
         }
         else
